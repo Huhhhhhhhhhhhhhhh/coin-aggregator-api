@@ -6,7 +6,7 @@ const BASE = "https://api.dexscreener.com/latest/dex";
 
 function toToken(d: any): Token {
   // DexScreener returns multiple pairs per token; pick best by liquidityUSD
-  const p = d?.pairs?.[0] ?? d;
+const p = (d && Array.isArray(d.pairs) && d.pairs.length > 0) ? d.pairs[0] : d;
 
   const address =
     (p && p.baseToken && p.baseToken.address) ||
