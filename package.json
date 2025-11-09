@@ -2,7 +2,6 @@
   "name": "memecoins-rt-agg",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "start": "node dist/server.js",
