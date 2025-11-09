@@ -1,0 +1,10 @@
+{
+  "info": { "name": "Memecoin RT Aggregator", "_postman_id": "abcd-efgh", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "item": [
+    { "name": "Health", "request": { "method": "GET", "url": "{{baseUrl}}/health" } },
+    { "name": "Tokens (default)", "request": { "method": "GET", "url": "{{baseUrl}}/tokens?limit=30&sort=volume&timeframe=24h" } },
+    { "name": "Tokens search PIPE", "request": { "method": "GET", "url": "{{baseUrl}}/tokens?q=PIPE&limit=20&sort=price_change&timeframe=1h" } },
+    { "name": "Tokens cursor page 2", "request": { "method": "GET", "url": "{{baseUrl}}/tokens?limit=20&cursor={{cursor}}" } }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080" }, { "key": "cursor", "value": "" }]
+}
