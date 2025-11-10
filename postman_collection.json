@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "c1f4c7d0-a3e9-4b1d-8f0a-6f8b1a2e3d4c",
+		"name": "Coin Aggregator API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Token List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/v1/tokens?limit=20&sortBy=volume_sol",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"v1",
+						"tokens"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20",
+							"description": "Number of tokens to return per page."
+						},
+						{
+							"key": "sortBy",
+							"value": "volume_sol",
+							"description": "Sort by: volume_sol, price_1hr_change, price_24hr_change, market_cap_sol"
+						},
+						{
+							"key": "cursor",
+							"value": "",
+							"description": "(Optional) The token_address of the last item from the previous page to get the next set.",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Fetches the main list of aggregated tokens with sorting and pagination."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:3000",
+			"description": "The base URL of your API. Change this to your deployed URL (e.g., from Render) when testing."
+		}
+	]
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Update Demo</title>
+  <style>
+    body { font-family: monospace; background: #000; color: #0f0; }
+    h1 { color: #0ff; }
+    #updates { margin-top: 20px; }
+    .update {
+      border-bottom: 1px dashed #050;
+      padding: 5px;
+      animation: fadeIn 0.5s ease;
+    }
+    .ticker { color: #0ff; font-weight: bold; }
+    .price { color: #fff; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <h1>Live Token Updates (WebSocket)</h1>
+  <p>Connecting to server...</p>
+  <div id="status"></div>
+  <div id="updates"></div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    // *** IMPORTANT: Change this to your deployed URL (e.g., from Render) ***
+    const SERVER_URL = "http://localhost:3001"; 
+
+    const statusEl = document.getElementById('status');
+    const updatesEl = document.getElementById('updates');
+
+    const socket = io(SERVER_URL);
+
+    socket.on("connect", () => {
+      console.log("Connected!", socket.id);
+      statusEl.textContent = "Status: Connected";
+      statusEl.style.color = "#0f0";
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected.");
+      statusEl.textContent = "Status: Disconnected. Retrying...";
+      statusEl.style.color = "#f00";
+    });
+
+    // Listen for the 'tokenUpdate' event
+    socket.on("tokenUpdate", (updates) => {
+      console.log("Received updates:", updates);
+      
+      updates.forEach(token => {
+        const updateDiv = document.createElement('div');
+        updateDiv.className = 'update';
+        updateDiv.innerHTML = `
+          [${new Date().toLocaleTimeString()}] 
+          <span class="ticker">${token.token_ticker}</span> 
+          <span class="price">${token.price_sol.toFixed(10)} SOL</span>
+          (Vol: ${token.volume_sol.toFixed(2)} SOL)
+        `;
+        // Add to top of list
+        updatesEl.prepend(updateDiv);
+      });
+
+      // Keep list from growing too large
+      while (updatesEl.children.length > 50) {
+        updatesEl.removeChild(updatesEl.lastChild);
+      }
+    });
+  </script>
+</body>
+</html>
