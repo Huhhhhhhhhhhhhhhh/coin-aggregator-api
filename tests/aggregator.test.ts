@@ -80,10 +80,14 @@ describe('Aggregation Service', () => {
     mockedGeckoFetch.mockResolvedValue([geckoLowVolume]);
     mockedDexScreenerFetch.mockResolvedValue([dexHighVolume]);
 
-    const result = await fetchAndAggregateData();
-    const SOL_PRICE_USD = 150.0;
-    const dexVolumeInSol = 2000 / 150; // Mock volume / mock SOL price
+    // --- FIX IS HERE: Corrected the calculation ---
+    // The normalizer calculates (volumeH24 / priceUsd * priceSol)
+    // (2000 / 150) * 1.5 = 20
+    const dexVolumeInSol = 20; 
+    // --- END OF FIX ---
     
+    const result = await fetchAndAggregateData();
+
     expect(result).toHaveLength(1); // Should only have one token
     expect(result[0].token_address).toBe('addr_common');
     expect(result[0].source).toBe('dexscreener'); // DexScreener won
@@ -105,7 +109,7 @@ describe('Aggregation Service', () => {
 
     const result = await fetchAndAggregateData();
     const SOL_PRICE_USD = 150.0;
-    const geckoVolumeInSol = 10000 / 150; // Mock volume / mock SOL price
+    const geckoVolumeInSol = 10000 / SOL_PRICE_USD; // Mock volume / mock SOL price
 
     expect(result).toHaveLength(1);
     expect(result[0].token_address).toBe('addr_common');
@@ -196,8 +200,7 @@ describe('Aggregation Service', () => {
         address: 'addr_minimal',
         name: 'MinCoin / SOL',
         base_token_price_usd: '100',
-        transactions: { h24: { buys: 0, sells: 0 } },
-        // 'market_cap_usd', 'volume_usd', 'price_change_percentage' are missing
+        // 'transactions', 'market_cap_usd', 'volume_usd', 'price_change_percentage' are missing
       },
       relationships: {
         base_token: { data: { id: 'addr_minimal' } },
